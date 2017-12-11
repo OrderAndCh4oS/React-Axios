@@ -17,16 +17,16 @@ export default class RequestJson {
         return this.instance.get(endPoint, config);
     }
 
-    post (endPoint, config) {
-        return this.instance.post(endPoint, config);
+    post (endPoint, data, config) {
+        return this.instance.post(endPoint, data, config);
     }
 
-    put (endPoint, config) {
-        return this.instance.put(endPoint, config);
+    put (endPoint, data, config) {
+        return this.instance.put(endPoint, data, config);
     }
 
-    patch (endPoint, config) {
-        return this.instance.patch(endPoint, config);
+    patch (endPoint, data, config) {
+        return this.instance.patch(endPoint, data, config);
 
     }
 
