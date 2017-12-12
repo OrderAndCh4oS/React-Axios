@@ -20,11 +20,21 @@ export default class Tasks extends Component {
             });
     }
 
+    renderTasks() {
+        let task = null;
+        if(!this.state.tasks.length) {
+            task = <div>Loading...</div>;
+        } else {
+            task = this.state.tasks.map(task =>
+                <div key={task.id}>
+                    <Task task={task}/>
+                </div>,
+            );
+        }
+        return task;
+    }
+
     render() {
-        return (this.state.tasks.map(task =>
-            <div key={task.id}>
-                <Task task={task}/>
-            </div>,
-        ));
+        return (this.renderTasks());
     }
 }

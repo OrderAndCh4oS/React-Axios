@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import RequestJson from './RequestJson';
 import Tasks from './Tasks';
+import TaskForm from './TaskForm';
 
 class App extends Component {
     constructor() {
@@ -12,6 +13,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
+                <TaskForm/>
                 <Tasks/>
             </div>
         );
