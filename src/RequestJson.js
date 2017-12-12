@@ -27,7 +27,6 @@ export default class RequestJson {
 
     patch (endPoint, data, config) {
         return this.instance.patch(endPoint, data, config);
-
     }
 
     delete (endPoint, config) {
