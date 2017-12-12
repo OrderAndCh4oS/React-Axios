@@ -1,6 +1,7 @@
 import RequestJson from './RequestJson';
 import React, { Component } from 'react';
 import Task from './Task';
+import TaskForm from './TaskForm';
 
 export default class Tasks extends Component {
     constructor(props) {
@@ -9,15 +10,29 @@ export default class Tasks extends Component {
             tasks: [],
         };
         this.requestJson = new RequestJson();
+        this.appendTask = this.appendTask.bind(this);
     }
 
     componentDidMount() {
+        this.requestTasks();
+    }
+
+    requestTasks() {
         this.requestJson.get('todos.json')
             .then(response => {
                 this.setState({
                     tasks: response.data,
                 });
             });
+    }
+
+    appendTask(task) {
+        this.setState(prevState => ({
+            tasks: [
+                ...prevState.tasks,
+                task,
+            ],
+        }));
     }
 
     renderTasks() {
@@ -35,6 +50,11 @@ export default class Tasks extends Component {
     }
 
     render() {
-        return (this.renderTasks());
+        return (
+            <div>
+                <TaskForm appendTask={this.appendTask}/>
+                {this.renderTasks()}
+            </div>
+        );
     }
 }

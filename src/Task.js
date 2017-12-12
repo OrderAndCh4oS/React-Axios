@@ -5,11 +5,11 @@ export default class Task extends Component {
     constructor(props) {
         super(props);
         this.state = this.props.task;
-        this.mark = this.mark.bind(this);
+        this.markTask = this.markTask.bind(this);
         this.requestJson = new RequestJson();
     }
 
-    mark() {
+    markTask() {
         this.requestJson.put('todos/' + this.state.id + '.json', {
             isCompleted: !this.state.isCompleted,
         }).then(response => {
@@ -25,7 +25,7 @@ export default class Task extends Component {
                 <h2>{this.state.title}</h2>
                 <p>{this.state.description}</p>
                 <p>Status: {this.state.isCompleted ? 'Complete' : 'Todo'}</p>
-                <button onClick={this.mark}>{this.state.isCompleted
+                <button onClick={this.markTask}>{this.state.isCompleted
                     ? 'Undo'
                     : 'Done'}</button>
             </div>

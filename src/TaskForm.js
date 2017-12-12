@@ -30,7 +30,11 @@ export default class TaskForm extends Component {
         const requestJson = new RequestJson();
         requestJson.post('todos.json', this.state)
             .then(response => {
-                alert(response);
+                this.props.appendTask(response.data);
+                this.setState({
+                    title: '',
+                    description: '',
+                });
             });
     }
 
@@ -45,7 +49,7 @@ export default class TaskForm extends Component {
                 <br/>
                 <label>
                     Discription:
-                    <input name="description" value={this.state.numberOfGuests}
+                    <input name="description" value={this.state.description}
                            onChange={this.handleInputChange}/>
                 </label>
                 <p><input type="submit" value="Submit"
