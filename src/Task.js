@@ -4,30 +4,28 @@ import React, { Component } from 'react';
 export default class Task extends Component {
     constructor(props) {
         super(props);
-        this.state = this.props.task;
-        this.markTask = this.markTask.bind(this);
         this.requestJson = new RequestJson();
+        this.performMarkTask = this.performMarkTask.bind(this);
     }
 
-    markTask() {
-        this.requestJson.put('todos/' + this.state.id + '.json', {
-            isCompleted: !this.state.isCompleted,
-        }).then(response => {
-            this.setState(
-                response.data,
-            );
-        });
+    performMarkTask() {
+        this.props.markTask(this.props.task.id);
     }
 
     render() {
         return (
-            <div>
-                <h2>{this.state.title}</h2>
-                <p>{this.state.description}</p>
-                <p>Status: {this.state.isCompleted ? 'Complete' : 'Todo'}</p>
-                <button onClick={this.markTask}>{this.state.isCompleted
-                    ? 'Undo'
-                    : 'Done'}</button>
+            <div className="bb bw1 pb3">
+                <h2>{this.props.task.title}</h2>
+                <p className="f4">{this.props.task.description}</p>
+                <p className="f4">Status: <span
+                    className="b">{this.props.task.isCompleted
+                    ? 'Complete'
+                    : 'Todo'}</span></p>
+                <button
+                    className="bg-black white b--black pointer hover-bg-blue bn pa2 f4"
+                    onClick={this.performMarkTask}>
+                    {this.props.task.isCompleted ? 'Undo' : 'Done'}
+                </button>
             </div>
         );
     }

@@ -10,7 +10,8 @@ export default class Tasks extends Component {
             tasks: [],
         };
         this.requestJson = new RequestJson();
-        this.appendTask = this.appendTask.bind(this);
+        this.prependTask = this.prependTask.bind(this);
+        this.markTask = this.markTask.bind(this);
     }
 
     componentDidMount() {
@@ -26,11 +27,11 @@ export default class Tasks extends Component {
             });
     }
 
-    appendTask(task) {
+    prependTask(task) {
         this.setState(prevState => ({
             tasks: [
-                ...prevState.tasks,
                 task,
+                ...prevState.tasks,
             ],
         }));
     }
@@ -40,19 +41,33 @@ export default class Tasks extends Component {
         if(!this.state.tasks.length) {
             task = <div>Loading...</div>;
         } else {
-            task = this.state.tasks.map(task =>
+            task = this.state.tasks.sort(task => task.isCompleted).map(task =>
                 <div key={task.id}>
-                    <Task task={task}/>
+                    <Task task={task} markTask={this.markTask}/>
                 </div>,
             );
         }
         return task;
     }
 
+    markTask(id) {
+        let task = this.state.tasks.filter(x => x.id === id).pop();
+        console.log(task);
+        this.requestJson.put('todos/' + id + '.json', {
+            isCompleted: !task.isCompleted,
+        }).then(response => {
+            let tasks = [...this.state.tasks];
+            tasks = tasks.filter(x => (x.id !== id));
+            tasks.push(response.data);
+            tasks.sort();
+            this.setState({tasks: tasks});
+        });
+    }
+
     render() {
         return (
             <div>
-                <TaskForm appendTask={this.appendTask}/>
+                <TaskForm prependTask={this.prependTask}/>
                 {this.renderTasks()}
             </div>
         );

@@ -30,7 +30,7 @@ export default class TaskForm extends Component {
         const requestJson = new RequestJson();
         requestJson.post('todos.json', this.state)
             .then(response => {
-                this.props.appendTask(response.data);
+                this.props.prependTask(response.data);
                 this.setState({
                     title: '',
                     description: '',
@@ -40,20 +40,19 @@ export default class TaskForm extends Component {
 
     render() {
         return (
-            <form>
-                <label>
-                    Title:
-                    <input name="title" value={this.state.title}
-                           onChange={this.handleInputChange}/>
-                </label>
-                <br/>
-                <label>
-                    Discription:
-                    <input name="description" value={this.state.description}
-                           onChange={this.handleInputChange}/>
-                </label>
-                <p><input type="submit" value="Submit"
-                          onClick={this.handleSubmit}/></p>
+            <form className="bb bw1">
+                <label className="pb2 db f4">Title</label>
+                <input className="b--black-80 f4 pa1 bw1 mb2 db w-100"
+                       name="title" value={this.state.title}
+                       onChange={this.handleInputChange} title="title"/>
+                <label className="pb2 db f4">Description</label>
+                <input className="b--black-80 f4 pa1 bw1 mb2 db w-100"
+                       name="description" value={this.state.description}
+                       onChange={this.handleInputChange} title="Description"/>
+                <p><input
+                    className="bg-black white b--black hover-bg-blue pointer bn pa2 f4"
+                    type="submit" value="Submit" onClick={this.handleSubmit}/>
+                </p>
             </form>
         );
     }

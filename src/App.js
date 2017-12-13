@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './App.css';
 import RequestJson from './RequestJson';
 import Tasks from './Tasks';
 
@@ -12,6 +11,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
+                <h1 className="f1 pb3 bb bw1">ToDo</h1>
                 <Tasks/>
             </div>
         );
