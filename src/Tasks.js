@@ -52,7 +52,6 @@ export default class Tasks extends Component {
 
     markTask(id) {
         let task = this.state.tasks.filter(x => x.id === id).pop();
-        console.log(task);
         this.requestJson.put('todos/' + id + '.json', {
             isCompleted: !task.isCompleted,
         }).then(response => {
