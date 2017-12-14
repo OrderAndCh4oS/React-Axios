@@ -41,7 +41,13 @@ export default class Tasks extends Component {
         if(!this.state.tasks.length) {
             task = <div>Loading...</div>;
         } else {
-            task = this.state.tasks.sort(task => task.isCompleted).map(task =>
+            task = this.state.tasks.sort((a, b) => {
+                if(a.isCompleted === b.isCompleted) {
+                    return a.createdAt > b.createdAt;
+                } else {
+                    return a.isCompleted - b.isCompleted;
+                }
+            }).map(task =>
                 <div key={task.id}>
                     <Task task={task} markTask={this.markTask}/>
                 </div>,
@@ -58,7 +64,7 @@ export default class Tasks extends Component {
             let tasks = [...this.state.tasks];
             tasks = tasks.filter(x => (x.id !== id));
             tasks.push(response.data);
-            tasks.sort();
+            tasks.sort(task => task.isCompleted);
             this.setState({tasks: tasks});
         });
     }
