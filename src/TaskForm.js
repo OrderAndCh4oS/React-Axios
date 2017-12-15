@@ -1,5 +1,6 @@
 import RequestJson from './RequestJson';
 import React, { Component } from 'react';
+import { handleInputChange } from './helpers';
 
 export default class TaskForm extends Component {
     constructor(props) {
@@ -8,21 +9,8 @@ export default class TaskForm extends Component {
             title: '',
             description: '',
         };
-
-        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleInputChange = handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox'
-            ? target.checked
-            : target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value,
-        });
     }
 
     handleSubmit(event) {
