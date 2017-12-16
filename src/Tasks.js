@@ -1,8 +1,10 @@
-import RequestJson from './RequestJson';
+import Request from './Request';
 import React, { Component } from 'react';
 import Task from './Task';
 import TaskForm from './TaskForm';
+import Pagination from './Pagination';
 import { sortByCompletedAndDate } from './helpers';
+import { paginatedHydraData } from './Hydra';
 
 export default class Tasks extends Component {
     constructor(props) {
@@ -11,32 +13,20 @@ export default class Tasks extends Component {
             member: [],
             pagination: {},
         };
-        this.requestJson = new RequestJson();
         this.prependTask = this.prependTask.bind(this);
         this.markTask = this.markTask.bind(this);
+        this.getResponseHandler = this.getResponseHandler.bind(this);
     }
 
     componentDidMount() {
-        this.requestTasks('todos?page=2');
+        const request = new Request();
+        request.getData('/api/todos?page=1', this.getResponseHandler);
     }
 
-    requestTasks(page) {
-        this.requestJson.get(page)
-            .then(response => {
-                console.log(response.data);
-                const data = response.data;
-                this.setState({
-                    pagination: {
-                        total: data['hydra:totalItems'],
-                        current: data['hydra:view']['@id'],
-                        first: data['hydra:view']['hydra:first'],
-                        last: data['hydra:view']['hydra:last'],
-                        next: data['hydra:view']['hydra:next'],
-                        prev: data['hydra:view']['hydra:previous'],
-                    },
-                    member: data['hydra:member'],
-                });
-            });
+    getResponseHandler(response) {
+        const data = response.data;
+        const state = paginatedHydraData(data);
+        this.setState(state);
     }
 
     prependTask(task) {
@@ -56,30 +46,37 @@ export default class Tasks extends Component {
         } else {
             task = this.state.member
                 .sort((a, b) => sortByCompletedAndDate(a, b))
-                .map(
-                    task =>
-                        <div key={task.id}>
-                            <Task task={task} markTask={this.markTask}/>
-                        </div>,
-                );
+                .map(this.setTask());
         }
         return task;
     }
 
+    setTask() {
+        return task =>
+            <div key={task.id}>
+                <Task task={task} markTask={this.markTask}/>
+            </div>;
+    }
+
     markTask(id) {
         let task = this.state.member.filter(x => x.id === id).pop();
-        this.requestJson.put('todos/' + id + '.json', {
+        const request = new Request();
+        request.put('todos/' + id, {
             isCompleted: !task.isCompleted,
         }).then(response => {
-            let tasks = [...this.state.member];
-            tasks = tasks.filter(x => (x.id !== id));
-            tasks.push(response.data);
-            tasks.sort(task => task.isCompleted);
-            this.setState(prevState => ({
-                member: tasks,
-                pagination: prevState.pagination,
-            }));
+            this.markTaskResponseHandler(id, response);
         });
+    }
+
+    markTaskResponseHandler(id, response) {
+        let tasks = [...this.state.member];
+        tasks = tasks.filter(x => (x.id !== id));
+        tasks.push(response.data);
+        tasks.sort(task => task.isCompleted);
+        this.setState(prevState => ({
+            member: tasks,
+            pagination: prevState.pagination,
+        }));
     }
 
     render() {
@@ -87,6 +84,8 @@ export default class Tasks extends Component {
             <div>
                 <TaskForm prependTask={this.prependTask}/>
                 {this.renderTasks()}
+                <Pagination pagination={this.state.pagination}
+                            getResponseHandler={this.getResponseHandler}/>
             </div>
         );
     }

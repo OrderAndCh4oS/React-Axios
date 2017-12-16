@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import RequestJson from './RequestJson';
+import RequestJson from './Request';
 import Tasks from './Tasks';
 
 class App extends Component {
     constructor() {
         super();
-        this.requestJson = new RequestJson();
+        this.request = new RequestJson();
     }
 
     render() {

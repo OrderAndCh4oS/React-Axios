@@ -1,28 +1,29 @@
-import RequestJson from './RequestJson';
 import React, { Component } from 'react';
+import Request from './Request';
 import { handleInputChange } from './helpers';
 
 export default class TaskForm extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            title: '',
-            description: '',
-        };
+        this.state = TaskForm.initialState();
         this.handleInputChange = handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    static initialState() {
+        return {
+            title: '',
+            description: '',
+        };
+    }
+
     handleSubmit(event) {
         event.preventDefault();
-        const requestJson = new RequestJson();
-        requestJson.post('todos.json', this.state)
+        const request = new Request();
+        request.post('todos.json', this.state)
             .then(response => {
                 this.props.prependTask(response.data);
-                this.setState({
-                    title: '',
-                    description: '',
-                });
+                this.setState(TaskForm.initialState());
             });
     }
 
