@@ -20,7 +20,7 @@ export default class TaskForm extends Component {
     handleSubmit(event) {
         event.preventDefault();
         const request = new Request();
-        request.post('todos.json', this.state)
+        request.post('api/todos.json', this.state)
             .then(response => {
                 this.props.prependTask(response.data);
                 this.setState(TaskForm.initialState());

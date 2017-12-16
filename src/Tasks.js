@@ -61,7 +61,7 @@ export default class Tasks extends Component {
     markTask(id) {
         let task = this.state.member.filter(x => x.id === id).pop();
         const request = new Request();
-        request.put('todos/' + id, {
+        request.put('api/todos/' + id, {
             isCompleted: !task.isCompleted,
         }).then(response => {
             this.markTaskResponseHandler(id, response);
