@@ -17,3 +17,8 @@ export function handleInputChange(event) {
         [name]: value,
     });
 }
+
+export function setParameter(endPoint, name, key) {
+    endPoint += '&' + name + '=' + key;
+    return endPoint;
+}

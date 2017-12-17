@@ -11,7 +11,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <h1 className="f1 pb3 bb bw1">ToDo</h1>
+                <h1 className="f1 pb3 bb bw1">Tasks</h1>
                 <TaskColumns/>
             </div>
         );

@@ -1,45 +1,16 @@
 import Request from './Request';
 import React, { Component } from 'react';
 import Task from './Task';
-import TaskForm from './TaskForm';
 import Pagination from './Pagination';
 import { sortByCompletedAndDate } from './helpers';
-import { paginatedHydraData } from './Hydra';
 
 export default class Tasks extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            member: [],
-            pagination: {},
-        };
         this.prependTask = this.prependTask.bind(this);
         this.markTask = this.markTask.bind(this);
-        this.getResponseHandler = this.getResponseHandler.bind(this);
-        this.updateState = this.updateState.bind(this);
-    }
-
-    componentDidMount() {
-        let endPoint = this.setEndPoint('api/todos?page=1');
-        this.getData(endPoint);
-    }
-
-    getData(endPoint) {
-        const request = new Request();
-        request.getData(endPoint, this.getResponseHandler);
-    }
-
-    setEndPoint(endPoint) {
-        if(typeof this.props.isCompleted !== 'undefined') {
-            endPoint += '&isCompleted=' + this.props.isCompleted;
-        }
-        return endPoint;
-    }
-
-    getResponseHandler(response) {
-        const data = response.data;
-        const state = paginatedHydraData(data);
-        this.setState(state);
+        this.paginationResponseHandler = this.paginationResponseHandler.bind(
+            this);
     }
 
     prependTask(task) {
@@ -53,23 +24,31 @@ export default class Tasks extends Component {
     }
 
     markTask(id) {
-        let task = this.state.member.filter(x => x.id === id).pop();
+        let task = this.props.tasks.member.filter(x => x.id === id).pop();
         const request = new Request();
         request.put('api/todos/' + id, {
             isCompleted: !task.isCompleted,
-        }).then(() => this.updateState());
+        }).then(() => {
+            this.props.updateState(
+                this.props.type,
+                this.props.tasks.pagination.current,
+            );
+        });
     }
 
-    updateState() {
-        this.getData(this.state.pagination.current);
+    paginationResponseHandler(response) {
+        this.props.updateState(
+            this.props.type,
+            response.data['hydra:view']['@id'],
+        );
     }
 
     renderTasks() {
         let task = null;
-        if(!this.state.member.length) {
+        if(typeof this.props.tasks.member === 'undefined') {
             task = <div>Loading...</div>;
         } else {
-            task = this.state.member
+            task = this.props.tasks.member
                 .sort((a, b) => sortByCompletedAndDate(a, b))
                 .map(this.setTask());
         }
@@ -86,10 +65,9 @@ export default class Tasks extends Component {
     render() {
         return (
             <div>
-                <TaskForm updateState={this.updateState}/>
                 {this.renderTasks()}
-                <Pagination pagination={this.state.pagination}
-                            getResponseHandler={this.getResponseHandler}/>
+                <Pagination pagination={this.props.tasks.pagination}
+                            getResponseHandler={this.paginationResponseHandler}/>
             </div>
         );
     }
