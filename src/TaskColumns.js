@@ -23,20 +23,32 @@ export default class TaskColumns extends Component {
         this.updateState = this.updateState.bind(this);
     }
 
+    static taskRequest(endPoint, handler) {
+        const request = new Request();
+        request.getData(endPoint, handler);
+    }
+
     componentDidMount() {
-        this.getData(
-            'api/todos?page=1&isCompleted=0',
+        const endPoint = 'api/todos?page=1';
+        TaskColumns.taskRequest(
+            endPoint + '&isCompleted=0&order[createdAt]=desc',
             this.todoResponseHandler,
         );
-        this.getData(
-            'api/todos?page=1&isCompleted=1',
+        TaskColumns.taskRequest(
+            endPoint + '&isCompleted=1&order[completedAt]=desc',
             this.completeResponseHandler,
         );
     }
 
-    getData(endPoint, handler) {
-        const request = new Request();
-        request.getData(endPoint, handler);
+    requestTaskData() {
+        TaskColumns.taskRequest(
+            this.state.todo.pagination.current,
+            this.todoResponseHandler,
+        );
+        TaskColumns.taskRequest(
+            this.state.complete.pagination.current,
+            this.completeResponseHandler,
+        );
     }
 
     todoResponseHandler(response) {
@@ -59,10 +71,19 @@ export default class TaskColumns extends Component {
 
     updateState(type, page) {
         if(type === 'todo') {
-            this.getData(page, this.todoResponseHandler);
+            TaskColumns.taskRequest(
+                page,
+                this.todoResponseHandler,
+            );
         }
         if(type === 'complete') {
-            this.getData(page, this.completeResponseHandler);
+            TaskColumns.taskRequest(
+                page,
+                this.completeResponseHandler,
+            );
+        }
+        if(type === 'both') {
+            this.requestTaskData();
         }
     }
 
@@ -77,7 +98,7 @@ export default class TaskColumns extends Component {
                                updateState={this.updateState}/>
                     </div>
                     <div className="w-50 pl3">
-                        <h2>Complete</h2>
+                        <h2>Done</h2>
                         <Tasks type={'complete'} tasks={this.state.complete}
                                updateState={this.updateState}/>
                     </div>

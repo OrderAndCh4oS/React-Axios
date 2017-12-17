@@ -2,25 +2,13 @@ import Request from './Request';
 import React, { Component } from 'react';
 import Task from './Task';
 import Pagination from './Pagination';
-import { sortByCompletedAndDate } from './helpers';
 
 export default class Tasks extends Component {
     constructor(props) {
         super(props);
-        this.prependTask = this.prependTask.bind(this);
         this.markTask = this.markTask.bind(this);
         this.paginationResponseHandler = this.paginationResponseHandler.bind(
             this);
-    }
-
-    prependTask(task) {
-        this.setState(prevState => ({
-            member: [
-                task,
-                ...prevState.member,
-            ],
-            pagination: prevState.pagination,
-        }));
     }
 
     markTask(id) {
@@ -30,7 +18,7 @@ export default class Tasks extends Component {
             isCompleted: !task.isCompleted,
         }).then(() => {
             this.props.updateState(
-                this.props.type,
+                'both',
                 this.props.tasks.pagination.current,
             );
         });
@@ -48,9 +36,7 @@ export default class Tasks extends Component {
         if(typeof this.props.tasks.member === 'undefined') {
             task = <div>Loading...</div>;
         } else {
-            task = this.props.tasks.member
-                .sort((a, b) => sortByCompletedAndDate(a, b))
-                .map(this.setTask());
+            task = this.props.tasks.member.map(this.setTask());
         }
         return task;
     }

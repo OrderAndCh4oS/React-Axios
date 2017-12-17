@@ -22,7 +22,7 @@ export default class TaskForm extends Component {
         const request = new Request();
         request.post('api/todos.json', this.state)
             .then(() => {
-                this.props.updateState();
+                this.props.updateState('both');
                 this.setState(TaskForm.initialState());
             });
     }

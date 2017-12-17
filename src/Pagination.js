@@ -13,8 +13,10 @@ export default class Pagination extends Component {
 
     handleClick(evt) {
         const request = new Request();
-        request.getData(this.props.pagination[evt.target.id],
-            this.props.getResponseHandler);
+        request.getData(
+            this.props.pagination[evt.target.id],
+            this.props.getResponseHandler,
+        );
     }
 
     render() {
