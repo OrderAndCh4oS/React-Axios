@@ -7,6 +7,10 @@ export default class Pagination extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({data: nextProps.data});
+    }
+
     handleClick(evt) {
         const request = new Request();
         request.getData(this.props.pagination[evt.target.id],
@@ -23,7 +27,8 @@ export default class Pagination extends Component {
     }
 
     firstPage() {
-        return this.props.pagination.first !== this.props.pagination.current &&
+        return this.props.pagination.first && this.props.pagination.first !==
+            this.props.pagination.current &&
             <div className="dib">
                 <button onClick={this.handleClick} id='first'
                         className="bg-black white b--black pointer hover-bg-blue bn pa2 f4 mr1">First
@@ -32,11 +37,11 @@ export default class Pagination extends Component {
                         className="bg-black white b--black pointer hover-bg-blue bn pa2 f4 mr1">Prev
                 </button>
             </div>;
-
     }
 
     lastPage() {
-        return this.props.pagination.last !== this.props.pagination.current &&
+        return this.props.pagination.last && this.props.pagination.last !==
+            this.props.pagination.current &&
             <div className="dib">
                 <button onClick={this.handleClick} id='next'
                         className="bg-black white b--black pointer hover-bg-blue bn pa2 f4 mr1">Next

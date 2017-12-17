@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import RequestJson from './Request';
-import Tasks from './Tasks';
+import TaskColumns from './TaskColumns';
 
 class App extends Component {
     constructor() {
@@ -12,7 +12,7 @@ class App extends Component {
         return (
             <div className="App">
                 <h1 className="f1 pb3 bb bw1">ToDo</h1>
-                <Tasks/>
+                <TaskColumns/>
             </div>
         );
     }

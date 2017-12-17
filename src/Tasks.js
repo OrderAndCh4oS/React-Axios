@@ -16,11 +16,24 @@ export default class Tasks extends Component {
         this.prependTask = this.prependTask.bind(this);
         this.markTask = this.markTask.bind(this);
         this.getResponseHandler = this.getResponseHandler.bind(this);
+        this.updateState = this.updateState.bind(this);
     }
 
     componentDidMount() {
+        let endPoint = this.setEndPoint('api/todos?page=1');
+        this.getData(endPoint);
+    }
+
+    getData(endPoint) {
         const request = new Request();
-        request.getData('/api/todos?page=1', this.getResponseHandler);
+        request.getData(endPoint, this.getResponseHandler);
+    }
+
+    setEndPoint(endPoint) {
+        if(typeof this.props.isCompleted !== 'undefined') {
+            endPoint += '&isCompleted=' + this.props.isCompleted;
+        }
+        return endPoint;
     }
 
     getResponseHandler(response) {
@@ -37,6 +50,18 @@ export default class Tasks extends Component {
             ],
             pagination: prevState.pagination,
         }));
+    }
+
+    markTask(id) {
+        let task = this.state.member.filter(x => x.id === id).pop();
+        const request = new Request();
+        request.put('api/todos/' + id, {
+            isCompleted: !task.isCompleted,
+        }).then(() => this.updateState());
+    }
+
+    updateState() {
+        this.getData(this.state.pagination.current);
     }
 
     renderTasks() {
@@ -58,31 +83,10 @@ export default class Tasks extends Component {
             </div>;
     }
 
-    markTask(id) {
-        let task = this.state.member.filter(x => x.id === id).pop();
-        const request = new Request();
-        request.put('api/todos/' + id, {
-            isCompleted: !task.isCompleted,
-        }).then(response => {
-            this.markTaskResponseHandler(id, response);
-        });
-    }
-
-    markTaskResponseHandler(id, response) {
-        let tasks = [...this.state.member];
-        tasks = tasks.filter(x => (x.id !== id));
-        tasks.push(response.data);
-        tasks.sort(task => task.isCompleted);
-        this.setState(prevState => ({
-            member: tasks,
-            pagination: prevState.pagination,
-        }));
-    }
-
     render() {
         return (
             <div>
-                <TaskForm prependTask={this.prependTask}/>
+                <TaskForm updateState={this.updateState}/>
                 {this.renderTasks()}
                 <Pagination pagination={this.state.pagination}
                             getResponseHandler={this.getResponseHandler}/>

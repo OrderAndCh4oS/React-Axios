@@ -21,8 +21,8 @@ export default class TaskForm extends Component {
         event.preventDefault();
         const request = new Request();
         request.post('api/todos.json', this.state)
-            .then(response => {
-                this.props.prependTask(response.data);
+            .then(() => {
+                this.props.updateState();
                 this.setState(TaskForm.initialState());
             });
     }
