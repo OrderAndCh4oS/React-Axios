@@ -28,13 +28,13 @@ export default class Task extends Component {
     render() {
         return (
             <div className="bb bw1 pb3">
-                <h2 className="mb2">{this.props.task.title}</h2>
-                <p className="f3 mt0">Status: <span className={'b ' +
+                <h3 className="mb2">{this.props.task.title}</h3>
+                <p className="f4 mt0">Status: <span className={'b ' +
                 (this.props.task.isCompleted ? '' : 'blue')}>
-                        {this.props.task.isCompleted ? 'Complete' : 'Todo'}
+                        {this.props.task.isCompleted ? 'Done' : 'Todo'}
                     </span>
                 </p>
-                <p className="f3">{this.props.task.description}</p>
+                <p className="f4">{this.props.task.description}</p>
                 {this.showDate()}
                 <button
                     className="bg-black white b--black pointer hover-bg-blue bn pa2 f4 db"

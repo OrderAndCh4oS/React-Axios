@@ -93,12 +93,12 @@ export default class TaskColumns extends Component {
                 <TaskForm updateState={this.updateState}/>
                 <div className="flex">
                     <div className="w-50 pr3 br b--black-20">
-                        <h2>Todo</h2>
+                        <h2 className="pb3 bb b--black-20">Todo</h2>
                         <Tasks type={'todo'} tasks={this.state.todo}
                                updateState={this.updateState}/>
                     </div>
                     <div className="w-50 pl3">
-                        <h2>Done</h2>
+                        <h2 className="pb3 bb b--black-20">Done</h2>
                         <Tasks type={'complete'} tasks={this.state.complete}
                                updateState={this.updateState}/>
                     </div>
