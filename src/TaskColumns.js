@@ -6,19 +6,49 @@ import { paginatedHydraData } from './Hydra';
 
 export default class TaskColumns extends Component {
 
-    constructor() {
-        super();
-        this.state = {
-            todo: {
-                member: [],
-                pagination: {},
-            },
-            complete: {
-                member: [],
-                pagination: {},
-            },
-        };
-    }
+    state = {
+        todo: {
+            member: [],
+            pagination: {},
+        },
+        complete: {
+            member: [],
+            pagination: {},
+        },
+    };
+    todoResponseHandler = (response) => {
+        const data = response.data;
+        const todo = paginatedHydraData(data);
+        this.setState(prevState => ({
+            todo: todo,
+            complete: prevState.complete,
+        }));
+    };
+    completeResponseHandler = (response) => {
+        const data = response.data;
+        const complete = paginatedHydraData(data);
+        this.setState(prevState => ({
+            todo: prevState.todo,
+            complete: complete,
+        }));
+    };
+    updateState = (type, page) => {
+        if(type === 'todo') {
+            TaskColumns.taskRequest(
+                page,
+                this.todoResponseHandler,
+            );
+        }
+        if(type === 'complete') {
+            TaskColumns.taskRequest(
+                page,
+                this.completeResponseHandler,
+            );
+        }
+        if(type === 'both') {
+            this.requestTaskData();
+        }
+    };
 
     static taskRequest(endPoint, handler) {
         const request = new Request();
@@ -47,42 +77,6 @@ export default class TaskColumns extends Component {
             this.completeResponseHandler,
         );
     }
-
-    todoResponseHandler = (response) => {
-        const data = response.data;
-        const todo = paginatedHydraData(data);
-        this.setState(prevState => ({
-            todo: todo,
-            complete: prevState.complete,
-        }));
-    };
-
-    completeResponseHandler = (response) => {
-        const data = response.data;
-        const complete = paginatedHydraData(data);
-        this.setState(prevState => ({
-            todo: prevState.todo,
-            complete: complete,
-        }));
-    };
-
-    updateState = (type, page) => {
-        if(type === 'todo') {
-            TaskColumns.taskRequest(
-                page,
-                this.todoResponseHandler,
-            );
-        }
-        if(type === 'complete') {
-            TaskColumns.taskRequest(
-                page,
-                this.completeResponseHandler,
-            );
-        }
-        if(type === 'both') {
-            this.requestTaskData();
-        }
-    };
 
     render() {
         return (
