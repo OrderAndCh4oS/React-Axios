@@ -1,28 +1,18 @@
 import React, { Component } from 'react';
-import Moment from 'react-moment';
+import { metaDate } from './helpers';
 
 export default class Task extends Component {
-    constructor(props) {
-        super(props);
-        this.performMarkTask = this.performMarkTask.bind(this);
-    }
 
-    performMarkTask() {
+    performMarkTask = () => {
         this.props.markTask(this.props.task.id);
-    }
+    };
 
     showDate() {
         if(this.props.task.completedAt !== null) {
-            return this.metaDate('Done', this.props.task.completedAt);
+            return metaDate('Done', this.props.task.completedAt);
         } else {
-            return this.metaDate('Added', this.props.task.createdAt);
+            return metaDate('Added', this.props.task.createdAt);
         }
-    }
-
-    metaDate(label, date) {
-        return <p className="f5 i mt0 pt2 fr w-80 tr">
-            {label}: <Moment format="MMM Do YYYY, h:mm:ss a">{date}</Moment>
-        </p>;
     }
 
     render() {

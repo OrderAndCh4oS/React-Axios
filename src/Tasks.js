@@ -4,14 +4,8 @@ import Task from './Task';
 import Pagination from './Pagination';
 
 export default class Tasks extends Component {
-    constructor(props) {
-        super(props);
-        this.markTask = this.markTask.bind(this);
-        this.paginationResponseHandler = this.paginationResponseHandler.bind(
-            this);
-    }
 
-    markTask(id) {
+    markTask = (id) => {
         let task = this.props.tasks.member.filter(x => x.id === id).pop();
         const request = new Request();
         request.put('api/todos/' + id, {
@@ -22,14 +16,14 @@ export default class Tasks extends Component {
                 this.props.tasks.pagination.current,
             );
         });
-    }
+    };
 
-    paginationResponseHandler(response) {
+    paginationResponseHandler = (response) => {
         this.props.updateState(
             this.props.type,
             response.data['hydra:view']['@id'],
         );
-    }
+    };
 
     renderTasks() {
         let task = null;

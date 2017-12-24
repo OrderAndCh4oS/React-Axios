@@ -18,9 +18,6 @@ export default class TaskColumns extends Component {
                 pagination: {},
             },
         };
-        this.todoResponseHandler = this.todoResponseHandler.bind(this);
-        this.completeResponseHandler = this.completeResponseHandler.bind(this);
-        this.updateState = this.updateState.bind(this);
     }
 
     static taskRequest(endPoint, handler) {
@@ -51,25 +48,25 @@ export default class TaskColumns extends Component {
         );
     }
 
-    todoResponseHandler(response) {
+    todoResponseHandler = (response) => {
         const data = response.data;
         const todo = paginatedHydraData(data);
         this.setState(prevState => ({
             todo: todo,
             complete: prevState.complete,
         }));
-    }
+    };
 
-    completeResponseHandler(response) {
+    completeResponseHandler = (response) => {
         const data = response.data;
         const complete = paginatedHydraData(data);
         this.setState(prevState => ({
             todo: prevState.todo,
             complete: complete,
         }));
-    }
+    };
 
-    updateState(type, page) {
+    updateState = (type, page) => {
         if(type === 'todo') {
             TaskColumns.taskRequest(
                 page,
@@ -85,7 +82,7 @@ export default class TaskColumns extends Component {
         if(type === 'both') {
             this.requestTaskData();
         }
-    }
+    };
 
     render() {
         return (

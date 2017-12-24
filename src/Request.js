@@ -5,7 +5,7 @@ export default class Request {
 
     constructor(token) {
         let config = {
-            baseURL: 'http://todo.dev',
+            baseURL: 'http://todo.localhost',
         };
         if('undefined' !== typeof token) {
             config.headers['Authorization'] = 'Bearer ' + token;

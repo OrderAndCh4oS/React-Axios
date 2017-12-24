@@ -6,8 +6,6 @@ export default class TaskForm extends Component {
     constructor(props) {
         super(props);
         this.state = TaskForm.initialState();
-        this.handleInputChange = handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     static initialState() {
@@ -17,7 +15,9 @@ export default class TaskForm extends Component {
         };
     }
 
-    handleSubmit(event) {
+    handleInputChange = handleInputChange.bind(this);
+
+    handleSubmit = (event) => {
         event.preventDefault();
         const request = new Request();
         request.post('api/todos.json', this.state)
@@ -25,7 +25,7 @@ export default class TaskForm extends Component {
                 this.props.updateState('both');
                 this.setState(TaskForm.initialState());
             });
-    }
+    };
 
     render() {
         return (
